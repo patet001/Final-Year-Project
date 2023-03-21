@@ -3,6 +3,8 @@ import Web3 from 'web3'
 import logo from '../logo.png';
 import './App.css';
 import Marketplace from '../abis/Marketplace.json'
+import Main from './Main';
+import Navbar from './Navbar';
 
 class App extends Component {
 
@@ -35,6 +37,8 @@ class App extends Component {
     if(networkData){
       const marketplace = web3.eth.Contract(Marketplace.abi, networkData.address)
       console.log(marketplace)
+      this.setState({marketplace: marketplace})
+      this.setState({loading:false})
     }
     else{
       window.alert("Marketplace contract not deployed on main network")
@@ -57,39 +61,16 @@ class App extends Component {
   render() {
     return (
       <div>
-        <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-          <a
-            className="navbar-brand col-sm-3 col-md-2 mr-0 text-white"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Web 3 Network
-          </a>
-        <ul className='navbar-nav px-3'>
-          <li className='nav-item text-nowrap d-none d-sm-none d-sm-block'>
-            <small className='text-white'><span id="account">Current User - {this.state.account}</span></small>
-          </li>
-        </ul>
-        </nav>
-        <div className="container-fluid mt-5">
-          <div className="row">
-            <main role="main" className="col-lg-12 d-flex text-center">
-              <div className="content mr-auto ml-auto">
-                <a
-                  href="http://www.dappuniversity.com/bootcamp"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src={logo} className="App-logo" alt="logo" />
-                </a>
-                <h1>Starter Page</h1>
-                <p>
-                  Edit <code>src/components/App.js</code> and save to reload.
-                </p>
-              </div>
-            </main>
+        <Navbar account={this.state.account} />        
+        <div className = "container-fluid mt-5">
+          <div className = "row">
+            <main role="main" className="col-lg-12 d-flex">
+              {this.state.loading ? <div id="loader" className='text-center'><p className='text-center'>Loading...</p></div>: <Main/>}
+            </main> 
           </div>
+
         </div>
+
       </div>
     );
   }
