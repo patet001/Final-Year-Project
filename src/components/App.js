@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Web3 from 'web3'
-import logo from '../logo.png';
 import './App.css';
 import Marketplace from '../abis/Marketplace.json'
 import Main from './Main';
@@ -13,7 +12,7 @@ class App extends Component {
     await this.loadBlockChainData()
     //console.log(window.web3)
   }
-    
+  //Check for blockchain enabled browser  
   async loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
@@ -23,10 +22,11 @@ class App extends Component {
       window.web3 = new Web3(window.web3.currentProvider)
     }
     else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+      window.alert("Browser is not blockchain enabled")
     }
   }
 
+  //load blockchain account data
   async loadBlockChainData(){
     const web3 = window.web3
     //load acc
@@ -38,10 +38,17 @@ class App extends Component {
       const marketplace = web3.eth.Contract(Marketplace.abi, networkData.address)
       console.log(marketplace)
       this.setState({marketplace: marketplace})
+      const postCount = await marketplace.methods.postCount().call()
+      //Load Posts from blockchain
+      for(var i = 1; i <= postCount; i++){
+        const post = await marketplace.methods.posts(i).call()
+        this.setState({posts:[...this.state.posts, post]})
+      }
       this.setState({loading:false})
+      
     }
     else{
-      window.alert("Marketplace contract not deployed on main network")
+      window.alert("Contract not deployed on main network")
     }
     console.log(networkId)
 
@@ -55,8 +62,13 @@ class App extends Component {
       posts: [],
       loading: true
     }
+    this.createPost = this.createPost.bind(this)
   }
-    
+  
+  createPost(name, content){
+    this.setState({loading:true})
+    this.state.marketplace.methods.createPost(name, content).send({from:this.state.account}).once('receipt',(receipt)=>{this.setState({loading : false})})
+  }
     
   render() {
     return (
@@ -65,7 +77,10 @@ class App extends Component {
         <div className = "container-fluid mt-5">
           <div className = "row">
             <main role="main" className="col-lg-12 d-flex">
-              {this.state.loading ? <div id="loader" className='text-center'><p className='text-center'>Loading...</p></div>: <Main/>}
+              {this.state.loading ? <div id="loader" className='text-center'><p className='text-center'>Loading...</p></div>
+              : <Main 
+                posts={this.state.posts}
+                createPost={this.createPost}/>}
             </main> 
           </div>
 
