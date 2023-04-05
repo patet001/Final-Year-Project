@@ -75,7 +75,9 @@ class App extends Component {
     this.setState({loading:true})
     this.state.marketplace.methods.createPost(name, content).send({from:this.state.account}).once('receipt',(receipt)=>{this.setState({loading : false})})
   }
-    
+
+
+
   render() {
     return (
       <div>

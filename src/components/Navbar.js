@@ -6,7 +6,8 @@ class Navbar extends Component {
   render() {
     return (
       <nav className="navbar  fixed-top bg-info p-0 shadow">
-        <a
+        <a 
+          href="http://localhost:3000"
           className="navbar-brand col-sm-3 col-md-2 mr-0 text-white"
           target="_blank"
           rel="noopener noreferrer"
@@ -14,8 +15,8 @@ class Navbar extends Component {
         >
           Web3 Network
         </a>
-        <a>
-          <img src = {logo} className ="App-logo" alt='logo' />
+        <a href="http://localhost:3000">
+          <img src = {logo} className ="App-logo" alt='logo'/>
         </a>
         <ul className="navbar-nav px-3">
           <li className="nav-item text-nowrap d-none d-sm-none d-sm-block">
