@@ -5,9 +5,13 @@ import Marketplace from '../abis/Marketplace.json'
 import Main from './Main';
 import Navbar from './Navbar';
 
+
 class App extends Component {
 
+  
+
   async componentWillMount(){
+    document.title = "Web3 Network"
     await this.loadWeb3()
     await this.loadBlockChainData()
     //console.log(window.web3)
@@ -28,6 +32,7 @@ class App extends Component {
 
   //load blockchain account data
   async loadBlockChainData(){
+    
     const web3 = window.web3
     //load acc
     const accounts = await web3.eth.getAccounts()
@@ -39,6 +44,7 @@ class App extends Component {
       console.log(marketplace)
       this.setState({marketplace: marketplace})
       const postCount = await marketplace.methods.postCount().call()
+      console.log(postCount.toString())
       //Load Posts from blockchain
       for(var i = 1; i <= postCount; i++){
         const post = await marketplace.methods.posts(i).call()
